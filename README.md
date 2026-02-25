@@ -130,7 +130,9 @@ Run ▶️
 
 > *The app has loading states (Skeleton), populated data, and empty states.*
 
-_(Add screenshots of the running app here)_
+<p align="center">
+  <video src="videos/Screen_recording_20260225_022415.mp4" width="300" controls title="App Demo"></video>
+</p>
 
 ---
 
