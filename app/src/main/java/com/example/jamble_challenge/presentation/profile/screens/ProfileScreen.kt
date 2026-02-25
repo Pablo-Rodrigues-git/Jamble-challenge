@@ -217,7 +217,13 @@ private fun ProfileScreenWithLivesPreview() {
         isLiveSeller = true,
         joinedAt = "June 2024",
         bio = null,
-        metrics = UserMetrics(5.2, 4.8, 112, "1.6K", "+99")
+        metrics = UserMetrics(
+            5.2,
+            4.8,
+            112,
+            "1.6K",
+            "+99"
+        )
     )
     JambleTheme {
         ProfileScreen(
