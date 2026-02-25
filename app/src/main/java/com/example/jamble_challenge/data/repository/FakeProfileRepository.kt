@@ -73,6 +73,17 @@ class FakeProfileRepository : ProfileRepository {
         R.drawable.avatar_04,
     )
 
+    private val scheduledTimes = listOf(
+        "6:00 PM",
+        "7:00 AM",
+        "8:30 PM",
+        "10:00 AM",
+        "12:00 PM",
+        "4:15 PM",
+        "9:00 AM",
+        "5:30 PM"
+    )
+
     private var currentUser: User = User(
         id = "1",
         name = "Felipe Sanchez",
@@ -115,7 +126,7 @@ class FakeProfileRepository : ProfileRepository {
                 isLive = listOf(true, false).random(),
                 viewers = (50..2000).random(),
                 likes = (100..5000).random(),
-                scheduledTime = if ((0..1).random() == 0) null else "8:00 PM"
+                scheduledTime =  scheduledTimes.random()
             )
         }
 
@@ -156,7 +167,7 @@ class FakeProfileRepository : ProfileRepository {
                 isLive = false,
                 viewers = 0,
                 likes = (100..2000).random(),
-                scheduledTime = null
+                scheduledTime = scheduledTimes.random()
             )
         }
 
