@@ -19,7 +19,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.jamble_challenge.R
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.jamble_challenge.core.ui.theme.AppTypography
 import com.example.jamble_challenge.core.ui.theme.JambleTheme
 import com.example.jamble_challenge.core.ui.theme.LiveRed
@@ -100,7 +99,9 @@ private fun LiveBadge(viewers: Int) {
         Text(
             text = "Live · $viewers",
             color = Color.White,
-            style = AppTypography.bodySmall
+            style = AppTypography.bodySmall,
+            maxLines = 1,
+            softWrap = false
         )
     }
 }
@@ -129,7 +130,9 @@ private fun ScheduledTopRow(
             Text(
                 text = time,
                 color = Color.White,
-                style = AppTypography.bodySmall
+                style = AppTypography.bodySmall,
+                maxLines = 1,
+                softWrap = false
             )
         }
 
@@ -155,7 +158,9 @@ private fun ScheduledTopRow(
             Text(
                 text = likes.toString(),
                 color = Color.White,
-                style = AppTypography.bodySmall
+                style = AppTypography.bodySmall,
+                maxLines = 1,
+                softWrap = false
             )
         }
     }
@@ -191,7 +196,7 @@ private fun LiveCardPreviewScheduled() {
                 imageRes = R.drawable.live_cover_02,
                 isLive = false,
                 viewers = 0,
-                likes = 46,
+                likes = 12345,
                 scheduledTime = "6:00 PM"
             )
         )

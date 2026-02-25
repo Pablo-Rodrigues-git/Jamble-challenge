@@ -49,17 +49,13 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     uiState: ProfileUiState,
     initialPage: Int = 0,
-    onRefreshLives: () -> Unit,
-    onRefreshReviews: () -> Unit,
-    onRefreshBookmarks: () -> Unit,
+    onRefreshAll: () -> Unit,
     onSaveBio: (String) -> Unit
 ) {
     ProfileContent(
         uiState = uiState,
         initialPage = initialPage,
-        onRefreshLives = onRefreshLives,
-        onRefreshReviews = onRefreshReviews,
-        onRefreshBookmarks = onRefreshBookmarks,
+        onRefreshAll = onRefreshAll,
         onSaveBio = onSaveBio
     )
 }
@@ -73,9 +69,7 @@ fun ProfileScreen(
 private fun ProfileContent(
     uiState: ProfileUiState,
     initialPage: Int = 0,
-    onRefreshLives: () -> Unit,
-    onRefreshReviews: () -> Unit,
-    onRefreshBookmarks: () -> Unit,
+    onRefreshAll: () -> Unit,
     onSaveBio: (String) -> Unit
 ) {
 
@@ -102,6 +96,11 @@ private fun ProfileContent(
         saver = LazyGridState.Saver
     ) { LazyGridState() }
 
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = uiState.isLoading,
+        onRefresh = onRefreshAll
+    )
+
     Scaffold(
         containerColor = BgPrimary,
         bottomBar = {
@@ -112,89 +111,63 @@ private fun ProfileContent(
         }
     ) { padding ->
 
-        LazyColumn(
-            state = mainListState,
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .pullRefresh(pullRefreshState)
         ) {
-            item {
-                if (uiState.isLoading && uiState.user == null) {
-                    ProfileHeaderSkeleton()
-                } else if (uiState.user != null) {
-                    ProfileHeader(
-                        user = uiState.user,
-                        onSaveBio = onSaveBio
+            LazyColumn(
+                state = mainListState,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                item {
+                    // Show skeleton if loading, otherwise content
+                    if (uiState.isLoading) {
+                        ProfileHeaderSkeleton()
+                    } else if (uiState.user != null) {
+                        ProfileHeader(
+                            user = uiState.user,
+                            onSaveBio = onSaveBio
+                        )
+                    }
+                }
+                stickyHeader {
+                    ProfileTabs(
+                        selectedIndex = pagerState.currentPage,
+                        onTabSelected = { index ->
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        }
                     )
                 }
-            }
-            stickyHeader {
-                ProfileTabs(
-                    selectedIndex = pagerState.currentPage,
-                    onTabSelected = { index ->
-                        scope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    }
-                )
-            }
-            item {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillParentMaxHeight()
-                ) { page ->
+                item {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillParentMaxHeight()
+                    ) { page ->
 
-                    when (tabs[page]) {
+                        when (tabs[page]) {
 
-                        ProfileTab.LIVES -> {
-
-                            if (uiState.isLoading && uiState.lives.isEmpty()) {
-                                LivesSkeleton()
-                            } else {
-                                val pullRefreshState = rememberPullRefreshState(
-                                    refreshing = uiState.isRefreshingLives,
-                                    onRefresh = onRefreshLives
-                                )
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .pullRefresh(pullRefreshState)
-                                ) {
-
+                            ProfileTab.LIVES -> {
+                                if (uiState.isLoading) {
+                                    LivesSkeleton()
+                                } else {
                                     LivesContent(
                                         lives = uiState.lives,
                                         scrollEnabled = true,
                                         gridState = livesGridState
                                     )
-
-                                    PullRefreshIndicator(
-                                        refreshing = uiState.isRefreshingLives,
-                                        state = pullRefreshState,
-                                        modifier = Modifier.align(Alignment.TopCenter)
-                                    )
                                 }
                             }
-                        }
 
-                        ProfileTab.REVIEWS -> {
-
-                            if (uiState.isLoading && uiState.reviews.isEmpty()) {
-                                ReviewsSkeleton()
-                            } else if (uiState.user != null) {
-                                val pullRefreshState = rememberPullRefreshState(
-                                    refreshing = uiState.isRefreshingReviews,
-                                    onRefresh = onRefreshReviews
-                                )
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .pullRefresh(pullRefreshState)
-                                ) {
-
+                            ProfileTab.REVIEWS -> {
+                                if (uiState.isLoading) {
+                                    ReviewsSkeleton()
+                                } else if (uiState.user != null) {
                                     ContentReview(
                                         reviews = uiState.reviews,
                                         rating = uiState.user.metrics.rating,
@@ -202,43 +175,20 @@ private fun ProfileContent(
                                         scrollEnabled = true,
                                         listState = reviewsListState
                                     )
-
-                                    PullRefreshIndicator(
-                                        refreshing = uiState.isRefreshingReviews,
-                                        state = pullRefreshState,
-                                        modifier = Modifier.align(Alignment.TopCenter)
-                                    )
+                                } else {
+                                    // Fallback if not loading but no user (should not happen if logic correct)
+                                    ReviewsSkeleton()
                                 }
-                            } else {
-                                ReviewsSkeleton()
                             }
-                        }
 
-                        ProfileTab.BOOKMARKS -> {
-                            if (uiState.isLoading && uiState.bookmarks.isEmpty()) {
-                                BookmarksSkeleton()
-                            } else {
-                                val pullRefreshState = rememberPullRefreshState(
-                                    refreshing = uiState.isRefreshingBookmarks,
-                                    onRefresh = onRefreshBookmarks
-                                )
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .pullRefresh(pullRefreshState)
-                                ) {
-
+                            ProfileTab.BOOKMARKS -> {
+                                if (uiState.isLoading) {
+                                    BookmarksSkeleton()
+                                } else {
                                     BookmarksContent(
                                         bookmarks = uiState.bookmarks,
                                         scrollEnabled = true,
                                         gridState = bookmarksGridState
-                                    )
-
-                                    PullRefreshIndicator(
-                                        refreshing = uiState.isRefreshingBookmarks,
-                                        state = pullRefreshState,
-                                        modifier = Modifier.align(Alignment.TopCenter)
                                     )
                                 }
                             }
@@ -246,6 +196,12 @@ private fun ProfileContent(
                     }
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = uiState.isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }
@@ -261,13 +217,7 @@ private fun ProfileScreenWithLivesPreview() {
         isLiveSeller = true,
         joinedAt = "June 2024",
         bio = null,
-        metrics = UserMetrics(
-            5.2,
-            4.8,
-            112,
-            "1.6K",
-            "+99"
-        )
+        metrics = UserMetrics(5.2, 4.8, 112, "1.6K", "+99")
     )
     JambleTheme {
         ProfileScreen(
@@ -276,9 +226,7 @@ private fun ProfileScreenWithLivesPreview() {
                 user = previewUser,
                 lives = mockLives
             ),
-            onRefreshLives = {},
-            onRefreshReviews = {},
-            onRefreshBookmarks = {},
+            onRefreshAll = {},
             onSaveBio = {}
         )
     }
@@ -294,9 +242,7 @@ private fun ProfileScreenLoadingPreview() {
                 user = null,
                 lives = emptyList()
             ),
-            onRefreshLives = {},
-            onRefreshReviews = {},
-            onRefreshBookmarks = {},
+            onRefreshAll = {},
             onSaveBio = {}
         )
     }
