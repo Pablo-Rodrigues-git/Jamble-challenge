@@ -28,20 +28,15 @@ class ProfileViewModel(
 
     private fun loadInitialData() {
         viewModelScope.launch {
+
             _uiState.update { it.copy(isLoading = true) }
 
             val user = repository.getUser()
-            val lives = repository.getLives()
-            val reviews = repository.getReviews()
-            val bookmarks = repository.getBookmarks()
 
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    user = user,
-                    lives = lives,
-                    reviews = reviews,
-                    bookmarks = bookmarks
+                    user = user
                 )
             }
         }

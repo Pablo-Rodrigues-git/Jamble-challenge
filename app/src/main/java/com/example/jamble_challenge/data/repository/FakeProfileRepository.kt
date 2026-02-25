@@ -11,6 +11,68 @@ import kotlinx.coroutines.delay
 
 class FakeProfileRepository : ProfileRepository {
 
+    private val livesStorage = mutableListOf<Live>()
+    private val bookmarksStorage = mutableListOf<Live>()
+    private val reviewsStorage = mutableListOf<Review>()
+
+    private var livesRefreshCount = 0
+    private var reviewsRefreshCount = 0
+    private var bookmarksRefreshCount = 0
+
+    private val liveTitles = listOf(
+        "Sneaker Drop",
+        "Luxury Watches Showcase",
+        "Streetwear Collection",
+        "Rare Pokemon Cards",
+        "Vintage Sneakers",
+        "Exclusive Hoodies",
+        "Limited Edition Caps",
+        "Collector's Items",
+        "Gaming Merch Live",
+        "Designer Bags Review"
+    )
+
+    private val usernames = listOf(
+        "john_doe",
+        "sarah_smith",
+        "alex_turner",
+        "emma_wilson",
+        "michael_brown",
+        "olivia_jones",
+        "david_miller",
+        "chris_evans",
+        "jessica_white",
+        "daniel_clark"
+    )
+
+    private val reviewMessages = listOf(
+        "Amazing quality!",
+        "Fast shipping, highly recommend.",
+        "Product exactly as described.",
+        "Great seller, will buy again.",
+        "Very professional service.",
+        "Item arrived in perfect condition.",
+        "Communication was excellent.",
+        "Super happy with my purchase!"
+    )
+
+    private val liveImages = listOf(
+        R.drawable.live_cover_01,
+        R.drawable.live_cover_02,
+        R.drawable.live_cover_03,
+        R.drawable.live_cover_04,
+        R.drawable.live_cover_05,
+        R.drawable.live_cover_06,
+        R.drawable.live_cover_07,
+
+    )
+
+    private val avatars = listOf(
+        R.drawable.avatar_02,
+        R.drawable.avatar_03,
+        R.drawable.avatar_04,
+    )
+
     private var currentUser: User = User(
         id = "1",
         name = "Felipe Sanchez",
@@ -42,83 +104,63 @@ class FakeProfileRepository : ProfileRepository {
 
     override suspend fun getLives(): List<Live> {
         delay(800)
-        return listOf(
-            Live("1", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("2", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("13", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("99", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("3", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("98", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("4", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("97", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("5", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("96", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("6", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("95", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("7", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("94", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("8", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("93", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("9", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("92", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("10", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("91", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("11", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("90", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("12", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("89", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-        )
+
+        livesRefreshCount++
+
+        val newItems = List(4) { index ->
+            Live(
+                id = "${System.currentTimeMillis()}_$index",
+                title = liveTitles.random(),
+                imageRes = liveImages.random(),
+                isLive = listOf(true, false).random(),
+                viewers = (50..2000).random(),
+                likes = (100..5000).random(),
+                scheduledTime = if ((0..1).random() == 0) null else "Tonight 8:00 PM"
+            )
+        }
+
+        livesStorage.addAll(0, newItems)
+        return livesStorage.toList()
     }
 
     override suspend fun getReviews(): List<Review> {
         delay(800)
-        return listOf(
-            Review("1", "@maria", "Produto incrível!", "2h atrás", R.drawable.avatar_03, 5),
-            Review("2", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("3", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("4", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("5", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("6", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("7", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("8", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("9", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("10", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("11", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("12", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("13", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("14", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("15", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-            Review("16", "@joao", "Entrega rápida!", "1 dia atrás", R.drawable.avatar_04, 4),
-        )
+
+        reviewsRefreshCount++
+
+        val newItems = List(3) { index ->
+            Review(
+                id = "${System.currentTimeMillis()}_$index",
+                username = usernames.random(),
+                message = reviewMessages.random(),
+                timeAgo = "Just now",
+                avatarRes = avatars.random(),
+                rating = (3..5).random()
+            )
+        }
+
+        reviewsStorage.addAll(0, newItems)
+        return reviewsStorage.toList()
     }
 
     override suspend fun getBookmarks(): List<Live> {
         delay(800)
-        return listOf(
-            Live("1", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("2", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("13", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("99", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("3", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("98", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("4", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("97", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("5", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("96", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("6", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("95", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("7", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("94", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("8", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("93", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("9", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("92", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("10", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("91", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("11", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("90", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-            Live("12", "Relógios Premium", R.drawable.live_cover_02, false, 0, "Hoje 20:00", 320),
-            Live("89", "Sneakers Drop", R.drawable.live_cover_03, true, 120, null, 540),
-        )
+
+        bookmarksRefreshCount++
+
+        val newItems = List(4) { index ->
+            Live(
+                id = "${System.currentTimeMillis()}_$index",
+                title = liveTitles.random(),
+                imageRes = liveImages.random(),
+                isLive = false,
+                viewers = 0,
+                likes = (100..2000).random(),
+                scheduledTime = null
+            )
+        }
+
+        bookmarksStorage.addAll(0, newItems)
+        return bookmarksStorage.toList()
     }
 }
