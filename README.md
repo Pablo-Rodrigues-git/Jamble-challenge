@@ -130,6 +130,26 @@ Run ▶️
 
 > *The app has loading states (Skeleton), populated data, and empty states.*
 
+<p align="center">
+  <img src="videos/app-running.gif" width="300" alt="App Demo">
+</p>
+
+| Splash | Home Empty | Skeleton Shimmer |
+|:---:|:---:|:---:|
+| <img src="images/splash.JPG" width="250"> | <img src="images/home_empty.JPG" width="250"> | <img src="images/skeleton_shimmer.JPG" width="250"> |
+
+| Home Populated Lives | Home Populated Reviews | Home Populated Bookmarks |
+|:---:|:---:|:---:|
+| <img src="images/home_populated_lives.JPG" width="250"> | <img src="images/home_populated_reviews.JPG" width="250"> | <img src="images/home_populated_bookmarks.JPG" width="250"> |
+
+| Home Bio Show More | Home Read Less | Home Add Bio Keyboard |
+|:---:|:---:|:---:|
+| <img src="images/home_bio_show_more.JPG" width="250"> | <img src="images/home_read_less.JPG" width="250"> | <img src="images/home_add_bio_keyboard.JPG" width="250"> |
+
+| Home Scroll Hiding Profile Info | Home Full Scroll | |
+|:---:|:---:|:---:|
+| <img src="images/home_scroll_hiding_profile_info.JPG" width="250"> | <img src="images/home_full_scroll.JPG" width="250"> | |
+
 ---
 
 ## 🧑‍💻 Author
