@@ -194,11 +194,18 @@ private fun ProfileContent(
                                         .fillMaxSize()
                                         .pullRefresh(pullRefreshState)
                                 ) {
+                                    val reviews = uiState.reviews
+
+                                    val averageRating = if (reviews.isNotEmpty()) {
+                                        reviews.map { it.rating }.average()
+                                    } else 0.0
+
+                                    val totalReviews = reviews.size
 
                                     ContentReview(
                                         reviews = uiState.reviews,
-                                        rating = uiState.user.metrics.rating,
-                                        totalReviews = uiState.user.metrics.reviewsCount,
+                                        rating = averageRating,
+                                        totalReviews = totalReviews,
                                         scrollEnabled = true,
                                         listState = reviewsListState
                                     )
