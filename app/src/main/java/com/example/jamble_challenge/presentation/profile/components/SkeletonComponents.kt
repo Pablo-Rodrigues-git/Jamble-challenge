@@ -128,7 +128,7 @@ fun LivesSkeleton() {
         ),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        userScrollEnabled = false // Skeletons usually don't scroll
+        userScrollEnabled = false
     ) {
         items(6) {
             LiveCardSkeleton()
@@ -138,7 +138,6 @@ fun LivesSkeleton() {
 
 @Composable
 fun BookmarksSkeleton() {
-    // Same layout as Lives
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxSize(),
