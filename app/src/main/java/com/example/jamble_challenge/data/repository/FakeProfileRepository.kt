@@ -113,6 +113,7 @@ class FakeProfileRepository : ProfileRepository {
                 title = liveTitles.random(),
                 imageRes = liveImages.random(),
                 isLive = listOf(true, false).random(),
+                viewers = (50..2000).random(),
                 likes = (100..5000).random(),
                 scheduledTime = if ((0..1).random() == 0) null else "8:00 PM"
             )
