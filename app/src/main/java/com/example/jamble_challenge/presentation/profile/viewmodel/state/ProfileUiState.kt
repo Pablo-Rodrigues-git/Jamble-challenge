@@ -9,5 +9,8 @@ data class ProfileUiState(
     val user: User? = null,
     val lives: List<Live> = emptyList(),
     val reviews: List<Review> = emptyList(),
-    val bookmarks: List<Live> = emptyList()
+    val bookmarks: List<Live> = emptyList(),
+    val isRefreshingLives: Boolean = false,
+    val isRefreshingReviews: Boolean = false,
+    val isRefreshingBookmarks: Boolean = false
 )

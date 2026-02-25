@@ -2,6 +2,7 @@ package com.example.jamble_challenge.presentation.profile.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,11 +26,10 @@ fun ContentReview(
         state = listState,
         userScrollEnabled = scrollEnabled,
         modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 600.dp),
+            .fillMaxSize(),
         contentPadding = PaddingValues(
-            start = 16.dp,
-            end = 16.dp,
+            start = 8.dp,
+            end = 8.dp,
             bottom = 16.dp
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)

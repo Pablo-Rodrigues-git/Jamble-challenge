@@ -2,6 +2,7 @@ package com.example.jamble_challenge.presentation.profile.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -28,8 +29,7 @@ fun BookmarksGrid(
         columns = GridCells.Fixed(2),
         userScrollEnabled = scrollEnabled,
         modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 600.dp),
+            .fillMaxSize(),
         contentPadding = PaddingValues(
             top = 8.dp,
             start = 16.dp,

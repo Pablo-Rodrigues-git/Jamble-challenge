@@ -14,10 +14,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.jamble_challenge.R
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.jamble_challenge.core.ui.theme.AppTypography
 import com.example.jamble_challenge.core.ui.theme.JambleTheme
 import com.example.jamble_challenge.core.ui.theme.LiveRed
@@ -78,7 +80,8 @@ fun LiveCard(
             style = AppTypography.bodyLarge,
             color = TextPrimary,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            fontWeight = FontWeight.Bold
         )
     }
 }

@@ -18,8 +18,7 @@ fun LivesGrid(
         columns = GridCells.Fixed(2),
         userScrollEnabled = scrollEnabled,
         modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 600.dp),
+            .fillMaxSize(),
         contentPadding = PaddingValues(
             horizontal = 16.dp,
             vertical = 12.dp

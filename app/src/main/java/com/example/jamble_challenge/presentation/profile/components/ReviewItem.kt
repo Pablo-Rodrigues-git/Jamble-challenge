@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.jamble_challenge.R
 import com.example.jamble_challenge.core.ui.theme.AppTypography
 import com.example.jamble_challenge.core.ui.theme.JambleTheme
@@ -40,7 +41,7 @@ fun ReviewItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(4.dp))
             .background(TextPrimary.copy(alpha = 0.04f))
             .padding(horizontal = 8.dp, vertical = 8.dp)
     ) {
@@ -55,7 +56,7 @@ fun ReviewItem(
                     painter = painterResource(review.avatarRes),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(26.dp)
+                        .size(18.dp)
                         .clip(CircleShape)
                 )
 
@@ -73,7 +74,9 @@ fun ReviewItem(
                 Text(
                     text = review.timeAgo,
                     style = AppTypography.bodySmall,
-                    color = TextSecondary
+                    color = TextSecondary,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(end = 5.dp)
                 )
             }
 

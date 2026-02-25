@@ -12,6 +12,10 @@ fun ProfileRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     ProfileScreen(
-        uiState = uiState
+        uiState = uiState,
+        onRefreshLives = viewModel::refreshLives,
+        onRefreshReviews = viewModel::refreshReviews,
+        onRefreshBookmarks = viewModel::refreshBookmarks,
+        onSaveBio = viewModel::updateBio
     )
 }

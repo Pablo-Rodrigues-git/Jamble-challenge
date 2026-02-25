@@ -8,14 +8,17 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
 import com.example.jamble_challenge.R
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.jamble_challenge.core.ui.theme.BgPrimary
 import com.example.jamble_challenge.core.ui.theme.JambleTheme
 import com.example.jamble_challenge.data.mock.mockLives
@@ -37,7 +40,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileScreen(
     uiState: ProfileUiState,
-    initialPage: Int = 0
+    initialPage: Int = 0,
+    onRefreshLives: () -> Unit,
+    onRefreshReviews: () -> Unit,
+    onRefreshBookmarks: () -> Unit,
+    onSaveBio: (String) -> Unit
 ) {
 
     if (uiState.isLoading) {
@@ -52,15 +59,26 @@ fun ProfileScreen(
 
     ProfileContent(
         uiState = uiState,
-        initialPage = initialPage
+        initialPage = initialPage,
+        onRefreshLives = onRefreshLives,
+        onRefreshReviews = onRefreshReviews,
+        onRefreshBookmarks = onRefreshBookmarks,
+        onSaveBio = onSaveBio
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterialApi::class
+)
 @Composable
 private fun ProfileContent(
     uiState: ProfileUiState,
-    initialPage: Int = 0
+    initialPage: Int = 0,
+    onRefreshLives: () -> Unit,
+    onRefreshReviews: () -> Unit,
+    onRefreshBookmarks: () -> Unit,
+    onSaveBio: (String) -> Unit
 ) {
 
     val user = uiState.user ?: return
@@ -104,7 +122,10 @@ private fun ProfileContent(
                 .padding(padding)
         ) {
             item {
-                ProfileHeader(user = user)
+                ProfileHeader(
+                    user = user,
+                    onSaveBio = onSaveBio
+                )
             }
             stickyHeader {
                 ProfileTabs(
@@ -117,39 +138,96 @@ private fun ProfileContent(
                 )
             }
             item {
-
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.fillMaxWidth()
-                        .height(500.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillParentMaxHeight()
                 ) { page ->
 
                     when (tabs[page]) {
 
                         ProfileTab.LIVES -> {
-                            LivesContent(
-                                lives = uiState.lives,
-                                scrollEnabled = false,
-                                gridState = livesGridState
+
+                            val pullRefreshState = rememberPullRefreshState(
+                                refreshing = uiState.isRefreshingLives,
+                                onRefresh = onRefreshLives
                             )
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .pullRefresh(pullRefreshState)
+                            ) {
+
+                                LivesContent(
+                                    lives = uiState.lives,
+                                    scrollEnabled = true,
+                                    gridState = livesGridState
+                                )
+
+                                PullRefreshIndicator(
+                                    refreshing = uiState.isRefreshingLives,
+                                    state = pullRefreshState,
+                                    modifier = Modifier.align(Alignment.TopCenter)
+                                )
+                            }
                         }
 
                         ProfileTab.REVIEWS -> {
-                            ContentReview(
-                                reviews = uiState.reviews,
-                                rating = user.metrics.rating,
-                                totalReviews = user.metrics.reviewsCount,
-                                scrollEnabled = false,
-                                listState = reviewsListState
+
+                            val pullRefreshState = rememberPullRefreshState(
+                                refreshing = uiState.isRefreshingReviews,
+                                onRefresh = onRefreshReviews
                             )
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .pullRefresh(pullRefreshState)
+                            ) {
+
+                                ContentReview(
+                                    reviews = uiState.reviews,
+                                    rating = uiState.user.metrics.rating,
+                                    totalReviews = uiState.user.metrics.reviewsCount,
+                                    scrollEnabled = true,
+                                    listState = reviewsListState
+                                )
+
+                                PullRefreshIndicator(
+                                    refreshing = uiState.isRefreshingReviews,
+                                    state = pullRefreshState,
+                                    modifier = Modifier.align(Alignment.TopCenter)
+                                )
+                            }
                         }
 
                         ProfileTab.BOOKMARKS -> {
-                            BookmarksContent(
-                                bookmarks = uiState.bookmarks,
-                                scrollEnabled = false,
-                                gridState = bookmarksGridState
+
+                            val pullRefreshState = rememberPullRefreshState(
+                                refreshing = uiState.isRefreshingBookmarks,
+                                onRefresh = onRefreshBookmarks
                             )
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .pullRefresh(pullRefreshState)
+                            ) {
+
+                                BookmarksContent(
+                                    bookmarks = uiState.bookmarks,
+                                    scrollEnabled = true,
+                                    gridState = bookmarksGridState
+                                )
+
+                                PullRefreshIndicator(
+                                    refreshing = uiState.isRefreshingBookmarks,
+                                    state = pullRefreshState,
+                                    modifier = Modifier.align(Alignment.TopCenter)
+                                )
+                            }
                         }
                     }
                 }
@@ -185,7 +263,11 @@ private fun ProfileScreenWithLivesPreview() {
                 isLoading = false,
                 user = previewUser,
                 lives = mockLives
-            )
+            ),
+            onRefreshLives = {},
+            onRefreshReviews = {},
+            onRefreshBookmarks = {},
+            onSaveBio = {}
         )
     }
 }
@@ -222,7 +304,11 @@ private fun ProfileScreenEmptyLivesPreview() {
                 isLoading = false,
                 user = previewUser,
                 lives = emptyList()
-            )
+            ),
+            onRefreshLives = {},
+            onRefreshReviews = {},
+            onRefreshBookmarks = {},
+            onSaveBio = {}
         )
     }
 }
@@ -243,7 +329,7 @@ private fun ProfileScreenReviewsTabPreview() {
         avatarRes = R.drawable.avatar_02,
         isLiveSeller = true,
         joinedAt = "June 2024",
-        bio = "sum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+        bio = "Sum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
         metrics = UserMetrics(
             deliveryDays = 5.2,
             rating = 4.9,
@@ -312,7 +398,11 @@ private fun ProfileScreenReviewsTabPreview() {
                 lives = emptyList(),
                 reviews = mockReviews
             ),
-            initialPage = 1
+            initialPage = 1,
+            onRefreshLives = {},
+            onRefreshReviews = {},
+            onRefreshBookmarks = {},
+            onSaveBio = {}
         )
     }
 }
@@ -371,7 +461,11 @@ private fun ProfileScreenBookmarksPreview() {
                 user = previewUser,
                 bookmarks = mockBookmarks
             ),
-            initialPage = 2
+            initialPage = 2,
+            onRefreshLives = {},
+            onRefreshReviews = {},
+            onRefreshBookmarks = {},
+            onSaveBio = {}
         )
     }
 }
@@ -409,7 +503,11 @@ private fun ProfileScreenBookmarksEmptyPreview() {
                 user = previewUser,
                 bookmarks = emptyList()
             ),
-            initialPage = 2
+            initialPage = 2,
+            onRefreshLives = {},
+            onRefreshReviews = {},
+            onRefreshBookmarks = {},
+            onSaveBio = {}
         )
     }
 }

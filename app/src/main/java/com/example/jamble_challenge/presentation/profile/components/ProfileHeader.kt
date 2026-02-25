@@ -18,7 +18,7 @@ fun ProfileHeader(
     onInviteClick: () -> Unit = {},
     onReferClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
-    onAddBioClick: () -> Unit = {}
+    onSaveBio: (String) -> Unit = {}
 ) {
 
     Column(
@@ -46,7 +46,8 @@ fun ProfileHeader(
 
         ProfileBio(
             bio = user.bio,
-            onAddBioClick = onAddBioClick
+            onSaveBio = onSaveBio,
+
         )
 
         ProfileActionsRow(
