@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,14 +20,14 @@ import com.example.jamble_challenge.core.ui.theme.TextSecondary
 
 @Composable
 fun BookmarksEmptyState() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
+        item {
             Spacer(modifier = Modifier.height(110.dp))
 
             Text(
@@ -44,9 +45,9 @@ fun BookmarksEmptyState() {
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-
         }
     }
+}
 
 @Preview(
     showBackground = true,

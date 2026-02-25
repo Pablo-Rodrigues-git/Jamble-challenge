@@ -3,6 +3,7 @@ package com.example.jamble_challenge.presentation.profile.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,54 +24,52 @@ import com.example.jamble_challenge.core.ui.theme.TextSecondary
 fun LivesEmptyState(
     onScheduleClick: () -> Unit = {}
 ) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(modifier = Modifier.height(110.dp))
+        item {
+            Spacer(modifier = Modifier.height(110.dp))
 
-        Text(
-            text = "There is nothing here yet",
-            style = AppTypography.titleLarge,
-            color = TextPrimary
-        )
+            Text(
+                text = "There is nothing here yet",
+                style = AppTypography.titleLarge,
+                color = TextPrimary
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = "Schedule a show and go Live!",
-            style = AppTypography.bodyMedium,
-            color = TextSecondary
-        )
+            Text(
+                text = "Schedule a show and go Live!",
+                style = AppTypography.bodyMedium,
+                color = TextSecondary
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Box(
-            modifier = Modifier
-                .height(48.dp)
-                .clip(RoundedCornerShape(24.dp))
-                .background(
-                    Brush.horizontalGradient(
-                        listOf(
-                            BrandPrimary,
-                            BrandPrimary.copy(alpha = 0.85f)
+            Box(
+                modifier = Modifier
+                    .height(48.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                BrandPrimary,
+                                BrandPrimary.copy(alpha = 0.85f)
+                            )
                         )
                     )
+                    .padding(horizontal = 32.dp)
+                    .clickable { onScheduleClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Schedule a Live",
+                    color = Color.White,
+                    style = AppTypography.bodyLarge
                 )
-                .padding(horizontal = 32.dp)
-                .clickable { onScheduleClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Schedule a Live",
-                color = Color.White,
-                style = AppTypography.bodyLarge
-            )
+            }
         }
     }
 }
