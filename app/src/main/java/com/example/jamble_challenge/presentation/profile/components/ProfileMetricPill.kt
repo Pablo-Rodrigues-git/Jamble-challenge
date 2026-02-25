@@ -27,11 +27,11 @@ import com.example.jamble_challenge.core.ui.theme.TextSecondary
 
 @Composable
 fun ProfileMetricPill(
+    modifier: Modifier = Modifier,
     icon: Painter?,
     value: String,
     suffix: String? = null,
     iconTint: Color = TextSecondary,
-    modifier: Modifier = Modifier
 ) {
 
     Surface(
@@ -44,7 +44,7 @@ fun ProfileMetricPill(
         Row(
             modifier = Modifier
                 .padding(
-                    horizontal = Dimens.Space12,
+                    horizontal = Dimens.Space8,
                     vertical = Dimens.Space8
                 ),
             verticalAlignment = Alignment.CenterVertically,
