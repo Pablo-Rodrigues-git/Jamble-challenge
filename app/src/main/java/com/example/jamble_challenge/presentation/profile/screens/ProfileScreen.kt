@@ -168,15 +168,22 @@ private fun ProfileContent(
                                 if (uiState.isLoading) {
                                     ReviewsSkeleton()
                                 } else if (uiState.user != null) {
+                                    val reviews = uiState.reviews
+
+                                    val averageRating = if (reviews.isNotEmpty()) {
+                                        reviews.map { it.rating }.average()
+                                    } else 0.0
+
+                                    val totalReviews = reviews.size
+
                                     ContentReview(
                                         reviews = uiState.reviews,
-                                        rating = uiState.user.metrics.rating,
-                                        totalReviews = uiState.user.metrics.reviewsCount,
+                                        rating = averageRating,
+                                        totalReviews = totalReviews,
                                         scrollEnabled = true,
                                         listState = reviewsListState
                                     )
                                 } else {
-                                    // Fallback if not loading but no user (should not happen if logic correct)
                                     ReviewsSkeleton()
                                 }
                             }

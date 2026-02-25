@@ -37,8 +37,15 @@ fun ReviewsSummary(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val formattedRating = if (rating >= 10) {
+                rating.toInt().toString()
+            } else {
+                String.format("%.1f", rating)
+                    .removeSuffix(".0")
+            }
+
             Text(
-                text = rating.toString(),
+                text = formattedRating,
                 fontSize = 40.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = TextPrimary
