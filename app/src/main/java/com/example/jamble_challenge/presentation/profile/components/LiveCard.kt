@@ -99,9 +99,7 @@ private fun LiveBadge(viewers: Int) {
         Text(
             text = "Live · $viewers",
             color = Color.White,
-            style = AppTypography.bodySmall,
-            maxLines = 1,
-            softWrap = false
+            style = AppTypography.bodySmall
         )
     }
 }
@@ -130,9 +128,7 @@ private fun ScheduledTopRow(
             Text(
                 text = time,
                 color = Color.White,
-                style = AppTypography.bodySmall,
-                maxLines = 1,
-                softWrap = false
+                style = AppTypography.bodySmall
             )
         }
 
@@ -158,9 +154,7 @@ private fun ScheduledTopRow(
             Text(
                 text = likes.toString(),
                 color = Color.White,
-                style = AppTypography.bodySmall,
-                maxLines = 1,
-                softWrap = false
+                style = AppTypography.bodySmall
             )
         }
     }
@@ -196,7 +190,7 @@ private fun LiveCardPreviewScheduled() {
                 imageRes = R.drawable.live_cover_02,
                 isLive = false,
                 viewers = 0,
-                likes = 12345,
+                likes = 46,
                 scheduledTime = "6:00 PM"
             )
         )
