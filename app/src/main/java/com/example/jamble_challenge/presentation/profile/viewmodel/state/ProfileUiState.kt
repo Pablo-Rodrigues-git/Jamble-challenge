@@ -12,5 +12,8 @@ data class ProfileUiState(
     val bookmarks: List<Live> = emptyList(),
     val isRefreshingLives: Boolean = false,
     val isRefreshingReviews: Boolean = false,
-    val isRefreshingBookmarks: Boolean = false
+    val isRefreshingBookmarks: Boolean = false,
+    val isLoadingMoreLives: Boolean = false,
+    val isLoadingMoreReviews: Boolean = false,
+    val isLoadingMoreBookmarks: Boolean = false
 )

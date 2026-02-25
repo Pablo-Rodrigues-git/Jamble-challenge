@@ -65,6 +65,51 @@ class ProfileViewModel(
         }
     }
 
+    fun loadMoreLives() {
+        if (_uiState.value.isLoadingMoreLives) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingMoreLives = true) }
+            val newLives = repository.getLives()
+            _uiState.update {
+                it.copy(
+                    lives = newLives,
+                    isLoadingMoreLives = false
+                )
+            }
+        }
+    }
+
+    fun loadMoreReviews() {
+        if (_uiState.value.isLoadingMoreReviews) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingMoreReviews = true) }
+            val newReviews = repository.getReviews()
+            _uiState.update {
+                it.copy(
+                    reviews = newReviews,
+                    isLoadingMoreReviews = false
+                )
+            }
+        }
+    }
+
+    fun loadMoreBookmarks() {
+        if (_uiState.value.isLoadingMoreBookmarks) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingMoreBookmarks = true) }
+            val newBookmarks = repository.getBookmarks()
+            _uiState.update {
+                it.copy(
+                    bookmarks = newBookmarks,
+                    isLoadingMoreBookmarks = false
+                )
+            }
+        }
+    }
+
     fun updateBio(newBio: String) {
         viewModelScope.launch {
             repository.updateBio(newBio)

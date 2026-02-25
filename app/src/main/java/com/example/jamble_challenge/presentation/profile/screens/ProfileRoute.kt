@@ -14,6 +14,9 @@ fun ProfileRoute(
     ProfileScreen(
         uiState = uiState,
         onRefreshAll = viewModel::refreshAll,
-        onSaveBio = viewModel::updateBio
+        onSaveBio = viewModel::updateBio,
+        onLoadMoreLives = viewModel::loadMoreLives,
+        onLoadMoreReviews = viewModel::loadMoreReviews,
+        onLoadMoreBookmarks = viewModel::loadMoreBookmarks
     )
 }

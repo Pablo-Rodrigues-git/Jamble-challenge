@@ -8,7 +8,9 @@ import com.example.jamble_challenge.domain.model.dataclass.Live
 fun LivesContent(
     lives: List<Live>,
     scrollEnabled: Boolean,
-    gridState: LazyGridState
+    gridState: LazyGridState,
+    isLoadingMore: Boolean = false,
+    onLoadMore: () -> Unit = {}
 ) {
     if (lives.isEmpty()) {
         LivesEmptyState()
@@ -16,7 +18,9 @@ fun LivesContent(
         LivesGrid(
             lives = lives,
             scrollEnabled = scrollEnabled,
-            gridState = gridState
+            gridState = gridState,
+            isLoadingMore = isLoadingMore,
+            onLoadMore = onLoadMore
         )
     }
 }

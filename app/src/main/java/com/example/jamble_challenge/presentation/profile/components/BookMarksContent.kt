@@ -8,7 +8,9 @@ import com.example.jamble_challenge.domain.model.dataclass.Live
 fun BookmarksContent(
     bookmarks: List<Live>,
     scrollEnabled: Boolean,
-    gridState: LazyGridState
+    gridState: LazyGridState,
+    isLoadingMore: Boolean = false,
+    onLoadMore: () -> Unit = {}
 ) {
     if (bookmarks.isEmpty()) {
         BookmarksEmptyState()
@@ -16,7 +18,9 @@ fun BookmarksContent(
         BookmarksGrid(
             bookmarks = bookmarks,
             scrollEnabled = scrollEnabled,
-            gridState = gridState
+            gridState = gridState,
+            isLoadingMore = isLoadingMore,
+            onLoadMore = onLoadMore
         )
     }
 }

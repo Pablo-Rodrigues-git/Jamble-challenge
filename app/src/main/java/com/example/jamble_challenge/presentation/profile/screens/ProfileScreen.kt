@@ -53,13 +53,19 @@ fun ProfileScreen(
     uiState: ProfileUiState,
     initialPage: Int = 0,
     onRefreshAll: () -> Unit,
-    onSaveBio: (String) -> Unit
+    onSaveBio: (String) -> Unit,
+    onLoadMoreLives: () -> Unit,
+    onLoadMoreReviews: () -> Unit,
+    onLoadMoreBookmarks: () -> Unit
 ) {
     ProfileContent(
         uiState = uiState,
         initialPage = initialPage,
         onRefreshAll = onRefreshAll,
-        onSaveBio = onSaveBio
+        onSaveBio = onSaveBio,
+        onLoadMoreLives = onLoadMoreLives,
+        onLoadMoreReviews = onLoadMoreReviews,
+        onLoadMoreBookmarks = onLoadMoreBookmarks
     )
 }
 
@@ -73,7 +79,10 @@ private fun ProfileContent(
     uiState: ProfileUiState,
     initialPage: Int = 0,
     onRefreshAll: () -> Unit,
-    onSaveBio: (String) -> Unit
+    onSaveBio: (String) -> Unit,
+    onLoadMoreLives: () -> Unit,
+    onLoadMoreReviews: () -> Unit,
+    onLoadMoreBookmarks: () -> Unit
 ) {
 
     val tabs = ProfileTab.entries.toTypedArray()
@@ -132,7 +141,6 @@ private fun ProfileContent(
                 modifier = Modifier.fillMaxSize()
             ) {
                 item {
-                    // Show skeleton if loading, otherwise content
                     if (uiState.isLoading) {
                         ProfileHeaderSkeleton()
                     } else if (uiState.user != null) {
@@ -169,7 +177,9 @@ private fun ProfileContent(
                                     LivesContent(
                                         lives = uiState.lives,
                                         scrollEnabled = true,
-                                        gridState = livesGridState
+                                        gridState = livesGridState,
+                                        isLoadingMore = uiState.isLoadingMoreLives,
+                                        onLoadMore = onLoadMoreLives
                                     )
                                 }
                             }
@@ -191,7 +201,9 @@ private fun ProfileContent(
                                         rating = averageRating,
                                         totalReviews = totalReviews,
                                         scrollEnabled = true,
-                                        listState = reviewsListState
+                                        listState = reviewsListState,
+                                        isLoadingMore = uiState.isLoadingMoreReviews,
+                                        onLoadMore = onLoadMoreReviews
                                     )
                                 } else {
                                     ReviewsSkeleton()
@@ -205,7 +217,9 @@ private fun ProfileContent(
                                     BookmarksContent(
                                         bookmarks = uiState.bookmarks,
                                         scrollEnabled = true,
-                                        gridState = bookmarksGridState
+                                        gridState = bookmarksGridState,
+                                        isLoadingMore = uiState.isLoadingMoreBookmarks,
+                                        onLoadMore = onLoadMoreBookmarks
                                     )
                                 }
                             }
@@ -250,7 +264,10 @@ private fun ProfileScreenWithLivesPreview() {
                 lives = mockLives
             ),
             onRefreshAll = {},
-            onSaveBio = {}
+            onSaveBio = {},
+            onLoadMoreLives = {},
+            onLoadMoreReviews = {},
+            onLoadMoreBookmarks = {}
         )
     }
 }
@@ -266,7 +283,10 @@ private fun ProfileScreenLoadingPreview() {
                 lives = emptyList()
             ),
             onRefreshAll = {},
-            onSaveBio = {}
+            onSaveBio = {},
+            onLoadMoreLives = {},
+            onLoadMoreReviews = {},
+            onLoadMoreBookmarks = {}
         )
     }
 }
