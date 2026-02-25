@@ -18,7 +18,7 @@ class ProfileViewModel(
         _uiState
             .onStart {
                 if (_uiState.value.user == null) {
-                    loadInitialData()
+                    loadUserData()
                 }
             }
             .stateIn(
@@ -27,13 +27,12 @@ class ProfileViewModel(
                 initialValue = ProfileUiState(isLoading = true)
             )
 
-    private fun loadInitialData() {
+    private fun loadUserData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            delay(2000)
-
             val user = repository.getUser()
+
             _uiState.update {
                 it.copy(
                     isLoading = false,
@@ -44,56 +43,27 @@ class ProfileViewModel(
     }
 
     fun refreshAll() {
-        refreshLives()
-        refreshReviews()
-        refreshBookmarks()
-    }
-
-    private fun refreshLives() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isRefreshingLives = true) }
+            _uiState.update { it.copy(isLoading = true) }
 
+            delay(1000)
+
+            val user = repository.getUser()
             val lives = repository.getLives()
-
-            _uiState.update {
-                it.copy(
-                    lives = lives,
-                    isRefreshingLives = false
-                )
-            }
-        }
-    }
-
-    private fun refreshReviews() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isRefreshingReviews = true) }
-
             val reviews = repository.getReviews()
-
-            _uiState.update {
-                it.copy(
-                    reviews = reviews,
-                    isRefreshingReviews = false
-                )
-            }
-        }
-    }
-
-    private fun refreshBookmarks() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isRefreshingBookmarks = true) }
-
             val bookmarks = repository.getBookmarks()
 
             _uiState.update {
                 it.copy(
-                    bookmarks = bookmarks,
-                    isRefreshingBookmarks = false
+                    isLoading = false,
+                    user = user,
+                    lives = lives,
+                    reviews = reviews,
+                    bookmarks = bookmarks
                 )
             }
         }
     }
-
 
     fun updateBio(newBio: String) {
         viewModelScope.launch {
@@ -109,4 +79,3 @@ class ProfileViewModel(
         }
     }
 }
-

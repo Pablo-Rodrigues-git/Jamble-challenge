@@ -66,7 +66,7 @@ fun LiveCard(
                 LiveBadge(live.viewers)
             } else {
                 ScheduledTopRow(
-                    time = live.scheduledTime.orEmpty(),
+                    time = live.scheduledTime.toString(),
                     likes = live.likes
                 )
             }
