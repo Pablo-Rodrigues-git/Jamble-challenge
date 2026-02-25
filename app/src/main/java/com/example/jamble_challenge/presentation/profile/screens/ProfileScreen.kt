@@ -1,6 +1,7 @@
 package com.example.jamble_challenge.presentation.profile.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.jamble_challenge.R
 import com.example.jamble_challenge.core.ui.theme.BgPrimary
@@ -101,8 +104,15 @@ private fun ProfileContent(
         onRefresh = onRefreshAll
     )
 
+    val localFocusManager = LocalFocusManager.current
+
     Scaffold(
         containerColor = BgPrimary,
+        modifier = Modifier.pointerInput(Unit) {
+            detectTapGestures(onTap = {
+                localFocusManager.clearFocus()
+            })
+        },
         bottomBar = {
             JambleBottomBar(
                 selectedItem = BottomNavItem.PROFILE,

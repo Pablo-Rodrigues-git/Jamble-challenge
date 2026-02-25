@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,6 +18,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,12 +46,28 @@ fun ProfileBio(
 
     if (isEditing) {
 
+        val focusRequester = remember { FocusRequester() }
+        var hasFocus by remember { mutableStateOf(false) }
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
+
         OutlinedTextField(
             value = text,
             onValueChange = { text = it },
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = Dimens.Space16),
+                .padding(horizontal = Dimens.Space16)
+                .focusRequester(focusRequester)
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused) {
+                        hasFocus = true
+                    } else if (hasFocus) {
+                        onSaveBio(text.trim())
+                        isEditing = false
+                    }
+                },
             placeholder = {
                 Text("Add a bio...")
             },
