@@ -107,6 +107,7 @@ class ProfileViewModelTest {
         assertEquals(1, finalState.reviews.size)
         assertEquals(1, finalState.bookmarks.size)
     }
+
     @Test
     fun `updateBio updates user bio`() = runTest {
 
@@ -135,4 +136,63 @@ class ProfileViewModelTest {
         assertEquals(null, state.user)
     }
 
+    @Test
+    fun `loadMoreLives updates lives and loading state`() = runTest {
+        val newLives = listOf(
+            Live(
+                id = "newLive",
+                title = "New Live",
+                imageRes = 0,
+                isLive = true,
+                viewers = 100,
+                likes = 50,
+                scheduledTime = null
+            )
+        )
+        repository.lives = newLives
+
+        viewModel.loadMoreLives()
+
+        advanceUntilIdle()
+
+    }
+
+    @Test
+    fun `loadMoreReviews updates reviews and loading state`() = runTest {
+        val newReviews = listOf(
+            Review(
+                id = "newReview",
+                username = "newUser",
+                message = "Great!",
+                timeAgo = "1m",
+                avatarRes = 0,
+                rating = 5
+            )
+        )
+        repository.reviews = newReviews
+
+        viewModel.loadMoreReviews()
+
+        advanceUntilIdle()
+    }
+
+    @Test
+    fun `loadMoreBookmarks updates bookmarks and loading state`() = runTest {
+        val newBookmarks = listOf(
+            Live(
+                id = "newBookmark",
+                title = "Future Live",
+                imageRes = 0,
+                isLive = false,
+                viewers = 0,
+                likes = 10,
+                scheduledTime = "Tomorrow"
+            )
+        )
+        repository.bookmarks = newBookmarks
+
+        viewModel.loadMoreBookmarks()
+
+        advanceUntilIdle()
+    }
 }
