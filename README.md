@@ -8,6 +8,14 @@ This project demonstrates mastery of **declarative UI**, **complex state managem
 
 ---
 
+## 📱 Usage & Important Note
+
+> **⚠️ ATTENTION:** When you launch the app for the first time, you will see **Empty States** for the lists (Lives, Reviews, Bookmarks). This is **intentional**.
+
+To populate the lists with data, please perform a **Pull-to-Refresh** gesture (swipe down from the top of the content). This simulates the initial data fetching from a network source.
+
+---
+
 ## 🌟 Features
 
 - 👤 **Rich Profile Header**: Avatar, expandable bio, seller badges, and statistic pills (deliveries, rating, followers).
