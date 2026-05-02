@@ -1,5 +1,6 @@
 package com.example.jamble_challenge.fakerepository
 
+import com.example.jamble_challenge.domain.common.Result
 import com.example.jamble_challenge.domain.model.dataclass.Live
 import com.example.jamble_challenge.domain.model.dataclass.Review
 import com.example.jamble_challenge.domain.model.dataclass.User
@@ -29,12 +30,32 @@ class FakeProfileRepository : ProfileRepository {
     var reviews = emptyList<Review>()
     var bookmarks = emptyList<Live>()
 
-    override suspend fun getUser(): User = user
-    override suspend fun getLives(): List<Live> = lives
-    override suspend fun getReviews(): List<Review> = reviews
-    override suspend fun getBookmarks(): List<Live> = bookmarks
+    var shouldReturnError = false
+    var errorMessage = "Test error"
 
-    override suspend fun updateBio(newBio: String) {
+    override suspend fun getUser(): Result<User> {
+        if (shouldReturnError) return Result.Error(message = errorMessage)
+        return Result.Success(user)
+    }
+
+    override suspend fun getLives(page: Int): Result<List<Live>> {
+        if (shouldReturnError) return Result.Error(message = errorMessage)
+        return Result.Success(lives)
+    }
+
+    override suspend fun getReviews(page: Int): Result<List<Review>> {
+        if (shouldReturnError) return Result.Error(message = errorMessage)
+        return Result.Success(reviews)
+    }
+
+    override suspend fun getBookmarks(page: Int): Result<List<Live>> {
+        if (shouldReturnError) return Result.Error(message = errorMessage)
+        return Result.Success(bookmarks)
+    }
+
+    override suspend fun updateBio(newBio: String): Result<Unit> {
+        if (shouldReturnError) return Result.Error(message = errorMessage)
         user = user.copy(bio = newBio)
+        return Result.Success(Unit)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.jamble_challenge.data.repository
 
 import com.example.jamble_challenge.R
+import com.example.jamble_challenge.domain.common.Result
 import com.example.jamble_challenge.domain.model.dataclass.Live
 import com.example.jamble_challenge.domain.model.dataclass.Review
 import com.example.jamble_challenge.domain.model.dataclass.User
@@ -8,16 +9,9 @@ import com.example.jamble_challenge.domain.model.dataclass.UserMetrics
 import com.example.jamble_challenge.domain.repository.ProfileRepository
 import kotlinx.coroutines.delay
 
-
 class FakeProfileRepository : ProfileRepository {
 
-    private val livesStorage = mutableListOf<Live>()
-    private val bookmarksStorage = mutableListOf<Live>()
-    private val reviewsStorage = mutableListOf<Review>()
-
-    private var livesRefreshCount = 0
-    private var reviewsRefreshCount = 0
-    private var bookmarksRefreshCount = 0
+    private val pageSize = 4
 
     private val liveTitles = listOf(
         "Sneaker Drop",
@@ -64,7 +58,6 @@ class FakeProfileRepository : ProfileRepository {
         R.drawable.live_cover_05,
         R.drawable.live_cover_06,
         R.drawable.live_cover_07,
-
     )
 
     private val avatars = listOf(
@@ -101,47 +94,38 @@ class FakeProfileRepository : ProfileRepository {
         )
     )
 
-    override suspend fun getUser(): User {
+    override suspend fun getUser(): Result<User> {
         delay(500)
-        return currentUser
+        return Result.Success(currentUser)
     }
 
-    override suspend fun updateBio(newBio: String) {
+    override suspend fun updateBio(newBio: String): Result<Unit> {
         delay(300)
-        currentUser = currentUser.copy(
-            bio = newBio
-        )
+        currentUser = currentUser.copy(bio = newBio)
+        return Result.Success(Unit)
     }
 
-    override suspend fun getLives(): List<Live> {
+    override suspend fun getLives(page: Int): Result<List<Live>> {
         delay(800)
-
-        livesRefreshCount++
-
-        val newItems = List(4) { index ->
+        val items = List(pageSize) { index ->
             Live(
-                id = "${System.currentTimeMillis()}_$index",
+                id = "live_${page}_$index",
                 title = liveTitles.random(),
                 imageRes = liveImages.random(),
                 isLive = listOf(true, false).random(),
                 viewers = (50..2000).random(),
                 likes = (100..5000).random(),
-                scheduledTime =  scheduledTimes.random()
+                scheduledTime = scheduledTimes.random()
             )
         }
-
-        livesStorage.addAll(0, newItems)
-        return livesStorage.toList()
+        return Result.Success(items)
     }
 
-    override suspend fun getReviews(): List<Review> {
+    override suspend fun getReviews(page: Int): Result<List<Review>> {
         delay(800)
-
-        reviewsRefreshCount++
-
-        val newItems = List(3) { index ->
+        val items = List(3) { index ->
             Review(
-                id = "${System.currentTimeMillis()}_$index",
+                id = "review_${page}_$index",
                 username = usernames.random(),
                 message = reviewMessages.random(),
                 timeAgo = "Just now",
@@ -149,19 +133,14 @@ class FakeProfileRepository : ProfileRepository {
                 rating = (3..5).random()
             )
         }
-
-        reviewsStorage.addAll(0, newItems)
-        return reviewsStorage.toList()
+        return Result.Success(items)
     }
 
-    override suspend fun getBookmarks(): List<Live> {
+    override suspend fun getBookmarks(page: Int): Result<List<Live>> {
         delay(800)
-
-        bookmarksRefreshCount++
-
-        val newItems = List(4) { index ->
+        val items = List(pageSize) { index ->
             Live(
-                id = "${System.currentTimeMillis()}_$index",
+                id = "bookmark_${page}_$index",
                 title = liveTitles.random(),
                 imageRes = liveImages.random(),
                 isLive = false,
@@ -170,8 +149,6 @@ class FakeProfileRepository : ProfileRepository {
                 scheduledTime = scheduledTimes.random()
             )
         }
-
-        bookmarksStorage.addAll(0, newItems)
-        return bookmarksStorage.toList()
+        return Result.Success(items)
     }
 }

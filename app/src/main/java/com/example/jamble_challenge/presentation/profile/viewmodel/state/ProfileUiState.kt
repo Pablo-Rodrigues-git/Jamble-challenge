@@ -10,10 +10,21 @@ data class ProfileUiState(
     val lives: List<Live> = emptyList(),
     val reviews: List<Review> = emptyList(),
     val bookmarks: List<Live> = emptyList(),
-    val isRefreshingLives: Boolean = false,
-    val isRefreshingReviews: Boolean = false,
-    val isRefreshingBookmarks: Boolean = false,
     val isLoadingMoreLives: Boolean = false,
     val isLoadingMoreReviews: Boolean = false,
-    val isLoadingMoreBookmarks: Boolean = false
+    val isLoadingMoreBookmarks: Boolean = false,
+    val error: ErrorState? = null
 )
+
+data class ErrorState(
+    val message: String,
+    val retryAction: RetryAction? = null
+)
+
+enum class RetryAction {
+    LOAD_PROFILE,
+    LOAD_LIVES,
+    LOAD_REVIEWS,
+    LOAD_BOOKMARKS,
+    REFRESH_ALL
+}
